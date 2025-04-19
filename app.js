@@ -20,6 +20,24 @@ app.get('/', (req, res) => {
     res.send("IOS");
 })
 
+app.get('/api/sights', async (req, res) => {
+
+    const collection = database.collection('sight');
+
+    try{
+        await client.connect();
+
+        const sights = await collection.find().toArray();
+
+        res.json(sights);
+
+    } catch(error){
+        console.error('An error occurd while fetching sights', error);
+        res.status(500).send('An error occurd while fetching sights');
+    }
+
+});
+
 
 app.listen(port, () => {
     console.log(`Example is listening on port:${port}`);
