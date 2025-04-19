@@ -1,7 +1,7 @@
 const cors = require('cors');
 const dotenv = require('dotenv')
 const express = require('express');
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 
 const app = express();
 const port = 3000;
@@ -37,6 +37,34 @@ app.get('/api/sights', async (req, res) => {
     }
 
 });
+
+app.get('/api/sights/:id', async (req, res) => {
+
+    const collection = database.collection('sight');
+
+    try{
+        await client.connect();
+
+        const sight_ID = req.params.id;
+        const object_ID = new ObjectId(sight_ID);
+
+        console.log(sight_ID, object_ID);
+
+        const sight = await collection.findOne({
+            _id : object_ID
+        })
+
+        if(sight){
+            res.send(sight);
+        } else{
+            res.status(404).send("Sight not found");
+        }
+
+    }catch(error){
+        console.log('An error occurd while fetching sight with id', error);
+        res.status(500).send('An error occurd while fetching sight with id');
+    }
+})
 
 
 app.listen(port, () => {
