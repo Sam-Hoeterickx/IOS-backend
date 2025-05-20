@@ -29,6 +29,8 @@ app.get('/api/sights', async (req, res) => {
 
         const sights = await collection.find().toArray();
 
+        console.log("fetch done");
+
         res.json(sights);
 
     } catch(error){
